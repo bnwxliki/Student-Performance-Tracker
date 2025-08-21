@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Performance Tracker</title>
+  
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 30px;
+      background-color: #f0f4f8; /* soft light background */
+      color: #2c3e50;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    select {
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      min-width: 200px;
+    }
+
+    button {
+      padding: 8px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #2980b9;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1c5980;
+    }
+
+    h2, h3 {
+      color: #34495e;
+      margin-top: 30px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      max-width: 400px;
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    ul li {
+      padding: 6px 0;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+
+    table {
+      width: 60%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2c3e50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    img {
+      margin-top: 20px;
+      max-width: 600px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Student Performance Tracker</h1>
+  <form method="POST" action="/">
+    <label for="student_id">Select Student:</label>
+    <select id="student_id" name="student_id" required>
+      <option value="" disabled selected>Choose a student</option>
+      {% for student in students %}
+      <option value="{{ student.student_id }}">{{ student.student_name }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Show Performance</button>
+  </form>
+
+  {% if selected_student %}
+  <h2>Student Details</h2>
+  <ul>
+    <li><strong>Name:</strong> {{ selected_student.student_name }}</li>
+    <li><strong>Gender:</strong> {{ selected_student.gender }}</li>
+    <li><strong>Class:</strong> {{ selected_student.class }}</li>
+    <li><strong>Section:</strong> {{ selected_student.section }}</li>
+    <li><strong>Date of Birth:</strong> {{ selected_student.dob }}</li>
+    <li><strong>Average Marks:</strong> {{ avg_marks }}</li>
+  </ul>
+
+  <h3>Subject-wise Marks</h3>
+  <table>
+    <thead>
+      <tr><th>Subject</th><th>Marks</th></tr>
+    </thead>
+    <tbody>
+      {% for row in student_data.itertuples() %}
+      <tr>
+        <td>{{ row.subject_name }}</td>
+        <td>{{ row.marks_obtained }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Marks Bar Chart</h3>
+  {% if chart %}
+    <img src="data:image/png;base64,{{ chart }}" alt="Bar Chart of Marks" />
+  {% endif %}
+  {% endif %}
+</body>
+</html>
